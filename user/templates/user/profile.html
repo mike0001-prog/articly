@@ -1,0 +1,102 @@
+{% extends 'user\base.html' %}
+{% load static %}
+{% block title %} Profile {% endblock %}
+{% block main %}
+<div style="height: 95vh;" class="wrapper p-1">
+    <div class="banner d-flex">
+    <div class="profile-wrapper">
+    <div class="profile-banner">
+        <img class="profile-img" style="object-fit: cover; width: 100%; height: 100%; border-radius: 50%;" src="{% static 'user\test2.jpg' %}" alt="profile-picture">
+    </div>
+    </div>
+   
+
+    
+    
+</div>
+<div class="user-info bg-white mt-3 p-3">
+    <h3 class="pp-color-bold">Activity</h3>
+    <div class="row">
+        <div class="col-lg-3 col-6 pp-color-bold "> <span class="p-1">{{ aggregate.likes_sum }}</span>Likes </div>
+        <div class="col-lg-3 col-6 pp-color-bold "> <span class="p-1">{{ connections|length }}</span>Connections</div>
+        <div class="col-lg-3 col-6 pp-color-bold "> <span class="p-1">{{ aggregate.comment_sum }}</span>Comments</div>
+        <div class="col-lg-3 col-6 pp-color-bold "> <span class="p-1">{{ articles|length }}</span>Articles</div>
+
+        <!-- <div class="col-lg-3 col-6"></div> -->
+
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <h4 class="pp-color-bold mt-3">Bio</h4>
+    <div>
+        {{ user_profile.bio}}
+    </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <h4 class="pp-color-bold">Rank</h4>
+            {{ user_profile.category}}
+        </div>
+    </div>
+    <h3 class="pp-color-bold mt-3">Articles</h3>
+
+</div>
+<div class="">
+
+    <!-- <div class="post w-100">
+            <div class="author-info d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="author-photo"></div>
+                    <div class="capitalize">
+                        <div class="author-name">{{ user_profile.user }}</div>
+                        <span class="author-role">{{ user_profile.category }}</span>
+                    </div>
+                </div>
+                <div>
+                    <form action="" method="post">
+                        <input type="hidden" name="uuid" value="">
+                    </form>
+                    <button class="connect-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+                        </svg>
+                        Connect
+                    </button>
+                </div>
+            </div>
+            
+            <div class="article-body">
+                <div class="article-title">Lorem Test</div>
+                <div class="article-text">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, facilis ut, 
+                    velit sed, nemo fugiat illum soluta voluptates labore adipisci magnam aliquam. 
+                    Necessitatibus eaque architecto iusto suscipit quaerat porro quidem?
+                </div>
+            </div>
+            
+            <div class="actions d-flex justify-content-around">
+                <button class="action-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+                    </svg>
+                </button>
+                
+                <button class="action-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                    </svg>
+                </button>
+                
+                <button class="action-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                    </svg>
+                </button>
+            </div>
+        </div> -->
+        {% for a in articles %}
+            {% include "user/components/article.html" with a=a likes=likes bookmarks=bookmarks connections=connections   %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

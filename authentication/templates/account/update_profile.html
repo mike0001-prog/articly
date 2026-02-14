@@ -1,0 +1,230 @@
+{% extends "user\base.html" %}
+{% block title %}
+Save Profile
+{% endblock %}
+{% block main %}
+    {% include "user/components/back_button.html"  %}
+
+    <div >
+        <div class="profile-form-card">
+            <div class="form-header">
+                <h4>Complete Your Profile</h4>
+                <p>Help others get to know you better by completing your profile</p>
+            </div>
+            
+            <form id="profileForm" action="{% url 'update_profile' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-body">
+                    <!-- Progress Indicator -->
+                    <!-- <div class="progress-indicator">
+                        <div class="progress-step active"></div>
+                        <div class="progress-step active"></div>
+                        <div class="progress-step active"></div>
+                        <div class="progress-step"></div>
+                    </div> -->
+                    
+                    <!-- Cover Photo Section -->
+                    <div class="cover-photo-section">
+                        <div class="cover-photo-upload" id="coverPhotoUpload" onclick="document.getElementById('coverInput').click()">
+                            {% if not profile %}
+                            <img id="coverPreview" class="cover-preview" alt="Cover photo">
+                            {% else %}
+                            <img style="display: block;" id="coverPreview" src="{{ profile.cover_photo.url }}" class="cover-preview" alt="Cover photo">
+                            {% endif %}
+                            {% if not profile %}
+                            <div class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                                <div class="upload-title">Add Cover Photo</div>
+                                <div class="upload-subtitle">Recommended: 1200 x 400px</div>
+                            </div>
+                            {% else %}
+                            <div style="display: none;" class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                                </svg>
+                                <div class="upload-title">Add Cover Photo</div>
+                                <div class="upload-subtitle">Recommended: 1200 x 400px</div>
+                            </div>
+                            {% endif %}
+                            <button type="button" class="change-cover-btn" onclick="event.stopPropagation(); document.getElementById('coverInput').click()">
+                                Change Cover
+                            </button>
+                        </div>
+                        <input type="file" name="cover_photo" accept="image/*" id="coverInput" onchange="handleCoverUpload(event)">
+                        <!-- Profile Photo Section -->
+                        <div class="profile-photo-section">
+                            <div class="profile-photo-upload" id="profilePhotoUpload" onclick="document.getElementById('profileInput').click()">
+                                {% if not profile %}
+                                <img  id="profilePreview"  class="profile-preview" alt="Profile photo">
+                                {% else %}
+                                <img style="display: block;" id="profilePreview" src="{{ profile.profile_photo.url }}" class="profile-preview" alt="Profile photo">
+
+                                {% endif %}
+                                {% if not profile %}
+                                <div class="profile-placeholder">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                    </svg>
+                                    <div class="placeholder-text">Add Photo</div>
+                                </div>
+                                {% else %}
+                                <div style="display: none;" class="profile-placeholder">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                    </svg>
+                                    <div class="placeholder-text">Add Photo</div>
+                                </div>
+                                {% endif %}
+                                <div class="camera-icon-overlay" onclick="event.stopPropagation(); document.getElementById('profileInput').click()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <input type="file" name="profile_photo" accept="image/*" id="profileInput" onchange="handleProfileUpload(event)">
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- School Name -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            School/University Name<span class="required">*</span>
+                        </label>
+                      
+                       {{ form.name_of_school }}
+                        <div class="form-help">Enter the name of your current or most recent educational institution</div>
+                    </div>
+                    
+                    <!-- Education Level -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            Level of Education<span class="required">*</span>
+                        </label>
+                       
+                        <select name="level_of_education" class="form-select" id="educationLevel" required>
+                            {% if not profile %}
+                            <option value="" disabled selected>Select your education level</option>
+                           {% else %}
+                            <option value="" disabled>Select your education level</option>
+
+                            {% endif %} 
+                            {% for f in form.level_of_education %}
+                            {% if profile.level_of_education == f.value %}
+                            <option  value="{{ f.value }}" selected>{{ f }}</option>
+                            {% else %}
+                            <option  value="{{ f.value }}">{{ f }}</option>
+                            {% endif %}
+                            
+                            {% endfor %}
+                            
+                            <!-- <option value="associate">Associate Degree</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                            <option value="phd">PhD/Doctorate</option>
+                            <option value="certificate">Professional Certificate</option>
+                            <option value="other">Other</option> -->
+                        </select> 
+                    </div>
+                    <!-- Bio -->
+                    <div class="form-section">
+                        <label class="form-label">
+                            Short Bio<span class="required">*</span>
+                        </label>
+                        <!-- {% comment %} <textarea 
+                            class="form-textarea" 
+                            id="bio" 
+                            placeholder="Tell us about yourself, your interests, and what you're passionate about..."
+                            required
+                            oninput="updateCharCount()"
+                            name="bio" cols="40" rows="10" required
+                        ></textarea> {% endcomment %} -->
+                        {{ form.bio }}
+                        <div class="char-count">
+                            <span id="charCount">0</span>/300
+                        </div>
+                        <div class="form-help">Share a brief introduction about yourself</div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <!-- <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button> -->
+                    <button type="submit" class="btn-submit" id="submitBtn">Complete Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<!-- {% comment "form" %}   
+ <img src="{{ profile.profile_photo.url }}" alt="">
+<span>{{ profile.profile_photo.url }}|pprint</span>
+{{ form.name_of_school }}
+ {% endcomment %} -->
+   
+    <script>
+        const form = document.getElementById('profileForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const bioTextarea = document.getElementById('bio');
+        const charCount = document.getElementById('charCount');
+        
+        // Handle cover photo upload
+        function handleCoverUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('coverPreview').src = e.target.result;
+                    document.getElementById('coverPhotoUpload').classList.add('has-image');
+                    updateProgress();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Handle profile photo upload
+        function handleProfileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                    document.getElementById('profilePhotoUpload').classList.add('has-image');
+                    updateProgress();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Update character count
+        function updateCharCount() {
+            const count = bioTextarea.value.length;
+            charCount.textContent = count;
+            
+            const charCountDiv = charCount.parentElement;
+            charCountDiv.classList.remove('warning', 'danger');
+            
+            if (count > 250) {
+                charCountDiv.classList.add('warning');
+            }
+            if (count >= 290) {
+                charCountDiv.classList.add('danger');
+            }
+            
+            updateProgress();
+        }
+        
+        // Update progress indicator
+      
+        // Form field change listeners
+       
+        
+       
+    </script>
+{% endblock %}

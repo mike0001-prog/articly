@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'user\styles.css'%}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    <!-- <header>
+       <div class="logo">
+         <h2>Articly</h2>
+       </div>
+       <div class="menu">
+        <ul>
+            <li>Home</li>
+            <li>Signup</li>
+            <li>about</li>
+        </ul>
+       </div>
+    </header> -->
+     <nav
+      class="navbar navbar-expand-sm bg-white pp-color"
+    
+     >
+      <div class="container">
+        <a class="navbar-brand pp-color" href="{% url 'user_home' %}"><h2>Articly</h2></a>
+
+        <!-- Nav tabs -->
+       <div class="navigation d-lg-block" style="display: none;" >
+        <ul>
+         
+          <li class="active "> <a  class="text-decoration-none pp-color"  href="{% url 'account_login' %}"> Sign In</a></li>
+          <li> <a class="text-decoration-none pp-color"  href="{% url 'account_signup' %}">Sign up</a> </li>
+        </ul>
+       </div>
+        
+        
+   <div class="btn-group dropleft d-lg-none" role="group">
+    
+        <button
+            id="dropdownId"
+            type="button"
+            class="btn btn-white dropdown-toggle "
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+        >
+               <svg width="30px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+</svg>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownId">
+            <a class="dropdown-item" href="#">Sign In </a>
+            <a class="dropdown-item" href="#">Sign up</a>
+        </div>
+    </div>
+
+    
+
+    
+      </div>
+     </nav>
+    
+    <main>
+         {% block main %}{% endblock main %}
+    </main>
+  <footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</body>
+</html>

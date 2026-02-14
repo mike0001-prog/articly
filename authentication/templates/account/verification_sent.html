@@ -1,0 +1,17 @@
+{% extends "account/base_signup_login.html" %}
+{% load i18n %}
+{% load allauth %}
+{% block head_title %}
+    {% trans "Verify Your Email Address" %}
+{% endblock head_title %}
+{% block form_space %}
+<div class="p-2 bg-white form-card text-center">
+    <h1 class="pp-color-bold text-capitalize"> verificaition sent</h1>
+    {% element p %}
+        {% blocktrans %}We have sent an email to you for verification.
+         Follow the link provided to finalize the signup process. 
+         {% endblocktrans %}
+    {% endelement %} 
+</div>
+   
+{% endblock  %}

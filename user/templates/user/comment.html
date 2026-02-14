@@ -1,0 +1,92 @@
+{% extends "user\base.html" %}
+{% load user_tags %}
+{% block title %} {{a.name}}  Comment {% endblock %}
+{% block main %}
+    {% include "user/components/back_button.html"  %}
+
+       {% include "user/components/article.html" with a=a likes=likes bookmarks=bookmarks connections=connections   %}
+              {% if not commented %}
+                    <div class="p-4 ">
+                        <form class="row justify-content-between" action="{% url 'create_comment' %}" method="post">
+
+                            {% csrf_token %}
+                            <input type="hidden" name="article" value="{{ a.id }}">
+                           <input 
+                            type="text" 
+                            class="post-title-input col-9"
+                            id="postTitle" 
+                            placeholder="comment as {{ request.user }}"
+                            maxlength="30"
+                            name="comment"
+                            required
+                            style="width: 75%;"
+                        > 
+                       <div class="col-3" style="width: 25%;" >
+                           <button type="submit" class="custom-btn"  style="width: 50px; height: 50px; border-radius: 50%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--pp)" class="size-6">
+                            <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                        </svg>
+
+                    </button> 
+                       </div>
+                        </form>
+                       
+                     
+                    </div>
+               {% endif %}
+                    
+           
+
+            <div class="comments-section mt-2">
+            <div class="comments-header">
+                <h5>Comments</h5>
+                <span class="comment-count">8 comments</span>
+            </div>
+            <div class="comments-container p-2" id="commentsContainer" style="overflow-y: scroll; height: 40vh;" >
+               {% if not commented %}
+                    <div class="text-capitalize text-muted text-center p-3"> No comments yet be the first to comment</div>
+                {% endif %}
+                {% for c in commented %}
+                    <div class="comment-wrapper m-1 other">
+                    <div class="comment-bubble-container">
+                        <!-- <div class="comment-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div> -->
+                        <div>
+                            <div class="comment-bubble">
+                                <div class="comment-author"><a class="text-decoration-none pp-color-bold" href="{% url 'user_profile' request.user.username|generate_token %}">{{ c.user }}</a>  </div>
+                               {% if c.is_flagged %}
+                                <p class="comment-text flagged-content">{{ c.comment }}</p>
+                                <div class="comment-time">
+                                    <span> {{ c.time_created | timesince }} </span>
+                                    <span style="cursor: pointer;" class="msg-flag-btn pp-color-bold ">show</span>
+                                </div>
+                                {% else %}
+                                <p class="comment-text">{{ c.comment }}</p>
+                                <div class="comment-time">
+                                    <span> {{ c.time_created | timesince }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+                
+                <!-- <div class="comment-wrapper m-1 other">
+                    <div class="comment-bubble-container">
+                        <div class="comment-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                        <div>
+                            <div class="comment-bubble">
+                                <div class="comment-author">Alex Martinez</div>
+                                <p class="comment-text">I've been experimenting with 3D elements and parallax scrolling. The depth it adds to pages is incredible, though you have to be careful not to overdo it and hurt performance.</p>
+                                <div class="comment-time">
+                                    <span>10m ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+                
+         
+{% endblock %}

@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages Component</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pp: rgb(150, 88, 207);
+            --bb: rgba(0, 0, 0, 0.329);
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 40px 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .messages-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .message-card {
+            border: none;
+            border-radius: 16px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            margin-bottom: 20px;
+            animation: slideIn 0.4s ease-out;
+            position: relative;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-card.dismissing {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+        
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+        
+        .message-content {
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+        }
+        
+        .message-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .message-icon svg {
+            width: 24px;
+            height: 24px;
+            z-index: 1;
+        }
+        
+        .message-icon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0.15;
+        }
+        
+        /* Success Message */
+        .message-card.success {
+            border-left: 4px solid var(--success);
+        }
+        
+        .message-card.success .message-icon {
+            color: var(--success);
+        }
+        
+        .message-card.success .message-icon::before {
+            background: var(--success);
+        }
+        
+        .message-card.success .message-title {
+            color: var(--success);
+        }
+        
+        /* Error Message */
+        .message-card.error {
+            border-left: 4px solid var(--error);
+        }
+        
+        .message-card.error .message-icon {
+            color: var(--error);
+        }
+        
+        .message-card.error .message-icon::before {
+            background: var(--error);
+        }
+        
+        .message-card.error .message-title {
+            color: var(--error);
+        }
+        
+        /* Warning Message */
+        .message-card.warning {
+            border-left: 4px solid var(--warning);
+        }
+        
+        .message-card.warning .message-icon {
+            color: var(--warning);
+        }
+        
+        .message-card.warning .message-icon::before {
+            background: var(--warning);
+        }
+        
+        .message-card.warning .message-title {
+            color: var(--warning);
+        }
+        
+        /* Info Message */
+        .message-card.info {
+            border-left: 4px solid var(--pp);
+        }
+        
+        .message-card.info .message-icon {
+            color: var(--pp);
+        }
+        
+        .message-card.info .message-icon::before {
+            background: var(--pp);
+        }
+        
+        .message-card.info .message-title {
+            color: var(--pp);
+        }
+        
+        .message-body {
+            flex: 1;
+        }
+        
+        .message-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        
+        .message-text {
+            font-size: 14px;
+            color: #65676b;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .message-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .message-btn {
+            background: transparent;
+            border: 2px solid currentColor;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .message-btn.primary {
+            background: currentColor;
+            color: white;
+        }
+        
+        .message-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .message-card.success .message-btn {
+            color: var(--success);
+        }
+        
+        .message-card.error .message-btn {
+            color: var(--error);
+        }
+        
+        .message-card.warning .message-btn {
+            color: var(--warning);
+        }
+        
+        .message-card.info .message-btn {
+            color: var(--pp);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #65676b;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .close-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #1c1e21;
+            transform: rotate(90deg);
+        }
+        
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Toast Messages (Fixed Position) */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+        }
+        
+        .toast-message {
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: toastSlideIn 0.4s ease-out;
+        }
+        
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .toast-message.dismissing {
+            animation: toastSlideOut 0.3s ease-out forwards;
+        }
+        
+        @keyframes toastSlideOut {
+            to {
+                opacity: 0;
+                transform: translateX(120%);
+            }
+        }
+        
+        .toast-content {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .toast-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .toast-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .toast-body {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .toast-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .toast-text {
+            font-size: 13px;
+            color: #65676b;
+        }
+        
+        /* Demo Controls */
+        .demo-controls {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            padding: 24px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .demo-controls h5 {
+            margin: 0 0 16px 0;
+            font-weight: 700;
+            color: #1c1e21;
+        }
+        
+        .demo-btn-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        
+        .demo-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .demo-btn.success {
+            background: var(--success);
+        }
+        
+        .demo-btn.error {
+            background: var(--error);
+        }
+        
+        .demo-btn.warning {
+            background: var(--warning);
+        }
+        
+        .demo-btn.info {
+            background: var(--pp);
+        }
+        
+        .section-title {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1c1e21;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Demo Controls -->
+        <div class="demo-controls">
+            <h5>Try Toast Notifications</h5>
+            <div class="demo-btn-group">
+                <button class="demo-btn success" onclick="showToast('success')">
+                    Show Success
+                </button>
+                <button class="demo-btn error" onclick="showToast('error')">
+                    Show Error
+                </button>
+                <button class="demo-btn warning" onclick="showToast('warning')">
+                    Show Warning
+                </button>
+                <button class="demo-btn info" onclick="showToast('info')">
+                    Show Info
+                </button>
+            </div>
+        </div>
+        
+        <div class="section-title">Static Messages</div>
+        
+        <!-- Messages Container -->
+        <div class="messages-container">
+            <!-- Success Message -->
+            <div class="message-card success">
+                <button class="close-btn" onclick="dismissMessage(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="message-content">
+                    <div class="message-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <div class="message-body">
+                        <div class="message-title">Post Published Successfully!</div>
+                        <p class="message-text">Your post has been published and is now visible to your connections. You can view it in your profile or share it with others.</p>
+                        <div class="message-actions">
+                            <button class="message-btn primary">View Post</button>
+                            <button class="message-btn">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="message-card error">
+                <button class="close-btn" onclick="dismissMessage(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="message-content">
+                    <div class="message-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <div class="message-body">
+                        <div class="message-title">Failed to Publish Post</div>
+                        <p class="message-text">We couldn't publish your post due to a network error. Please check your connection and try again.</p>
+                        <div class="message-actions">
+                            <button class="message-btn primary">Try Again</button>
+                            <button class="message-btn">Save Draft</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Warning Message -->
+            <div class="message-card warning">
+                <button class="close-btn" onclick="dismissMessage(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="message-content">
+                    <div class="message-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                    </div>
+                    <div class="message-body">
+                        <div class="message-title">Content Under Review</div>
+                        <p class="message-text">Your post contains content that may violate our community guidelines. It will be reviewed by our moderation team within 24 hours.</p>
+                        <div class="message-actions">
+                            <button class="message-btn primary">Edit Post</button>
+                            <button class="message-btn">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Message -->
+            <div class="message-card info">
+                <button class="close-btn" onclick="dismissMessage(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div class="message-content">
+                    <div class="message-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                        </svg>
+                    </div>
+                    <div class="message-body">
+                        <div class="message-title">New Features Available</div>
+                        <p class="message-text">We've added new formatting options to the post editor. You can now add images, videos, and rich text formatting to your posts.</p>
+                        <div class="message-actions">
+                            <button class="message-btn primary">Explore Features</button>
+                            <button class="message-btn">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        // Dismiss message
+        function dismissMessage(btn) {
+            const messageCard = btn.closest('.message-card');
+            messageCard.classList.add('dismissing');
+            setTimeout(() => {
+                messageCard.style.display = 'none';
+            }, 300);
+        }
+        
+        // Toast notification system
+        function showToast(type) {
+            const toastContainer = document.getElementById('toastContainer');
+            
+            const messages = {
+                success: {
+                    title: 'Success!',
+                    text: 'Action completed successfully',
+                    icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />'
+                },
+                error: {
+                    title: 'Error!',
+                    text: 'Something went wrong',
+                    icon: '<path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />'
+                },
+                warning: {
+                    title: 'Warning!',
+                    text: 'Please review your action',
+                    icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />'
+                },
+                info: {
+                    title: 'Info',
+                    text: 'Here\'s something you should know',
+                    icon: '<path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />'
+                }
+            };
+            
+            const msg = messages[type];
+            const colors = {
+                success: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b',
+                info: 'rgb(150, 88, 207)'
+            };
+            
+            const toast = document.createElement('div');
+            toast.className = `toast-message ${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <div class="toast-icon" style="background: ${colors[type]}15; color: ${colors[type]}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            ${msg.icon}
+                        </svg>
+                    </div>
+                    <div class="toast-body">
+                        <div class="toast-title" style="color: ${colors[type]}">${msg.title}</div>
+                        <div class="toast-text">${msg.text}</div>
+                    </div>
+                    <button class="close-btn" onclick="dismissToast(this)" style="position: static; margin-left: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                dismissToast(toast.querySelector('.close-btn'));
+            }, 50000);
+        }
+        
+        function dismissToast(btn) {
+            const toast = btn.closest('.toast-message');
+            toast.classList.add('dismissing');
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }
+    </script>
+</body>
+</html>
+

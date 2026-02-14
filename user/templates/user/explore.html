@@ -1,0 +1,92 @@
+{% extends 'user\base.html' %}
+{% load user_tags %}
+{% block title %} Explore {% endblock title %}
+{% block main %}
+
+<!-- {% for a in  p %}
+    {{ a }}
+{% endfor %} -->
+<!-- <div class="wrapper p-2">
+    <div class="post  w-100">
+    <div style="justify-content: space-between;" class="author-info d-flex align-items-center p-1">
+     <div class="d-flex align-items-center">
+       <div class="author-photo d-inline-block">
+       </div>
+      <div class="d-inline capitalize">Oyeniyi Kehinde 
+        <span class="d-block text-muted">Master</span> </div>
+     </div>
+    <div>
+      <form action="" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="uuid" value="">
+      </form>
+       <button class="connect-btn">
+        <svg width="2rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+</svg>
+      connect
+     </button>
+    </div>
+    </div>
+    <div class="article-body p-2">
+      <div class="article-title text-capitalize h4" style="color: var(--pp); font-style: italic;">--lorem test--</div>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, facilis ut, 
+      velit sed, nemo fugiat illum soluta voluptates labore adipisci magnam aliquam. 
+      Necessitatibus eaque architecto iusto suscipit quaerat porro quidem?
+    </div>
+    <div class="actions d-flex justify-content-around p-2">
+      <svg  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" width="40px" stroke="var(--pp)" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+      </svg>  
+      <svg width="40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--pp)" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+</svg>
+    <svg width="40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--pp)" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+</svg>
+  
+    </div>
+  </div>
+</div> -->
+     <div class="mb-3">
+        <div class="search w-100">
+            <form class="search_form" action="{% url 'search_page' %}" method="post">
+                {% csrf_token %}
+       
+                   <input 
+        type="search" 
+        class="form-input " 
+        id="search" 
+        placeholder="Search Article, Users"
+        required
+        maxlength="50"
+        name="search_query"
+        style="width: 80%;"
+        >
+        
+         
+
+        <button type="submit" style="width: 50px; height: 50px; border-radius: 50%;" class="custom-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--pp)" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+</svg>
+        </button>
+         
+            </form>
+           
+        </div>
+        <div class="d-flex">
+           <h3 style="color: var(--pp);">Trending</h3> 
+        <svg width="40px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--pp)" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+        </svg>
+        </div>
+     </div>
+<div class="wrapper">
+
+{% for a in articles %}
+   
+    {% include "user/components/article.html" with a=a likes=likes bookmarks=bookmarks connections=connections %}
+
+{% endfor %}
+{% endblock %}

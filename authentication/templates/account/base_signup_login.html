@@ -1,0 +1,77 @@
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load allauth account %}
+{% load static %}
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articly - Share Your Ideas</title>
+    <link rel="stylesheet" href="{% static 'user/account.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  
+</head>
+<body>
+    <div class="landing-container">
+        <!-- Left Side - Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="logo">Articly</h1>
+                <p class="tagline">Share your ideas with the world</p>
+                
+                <div class="hero-image-container">
+                    <svg class="hero-image" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Illustration Background -->
+                        <rect width="400" height="300" rx="24" fill="white"/>
+                        
+                        <!-- Document Icon -->
+                        <rect x="80" y="60" width="240" height="180" rx="12" fill="#f0f0f0"/>
+                        <rect x="110" y="90" width="80" height="8" rx="4" fill="#b794f6"/>
+                        <rect x="110" y="110" width="180" height="6" rx="3" fill="#e0e0e0"/>
+                        <rect x="110" y="125" width="160" height="6" rx="3" fill="#e0e0e0"/>
+                        <rect x="110" y="140" width="170" height="6" rx="3" fill="#e0e0e0"/>
+                        <rect x="110" y="165" width="180" height="6" rx="3" fill="#e0e0e0"/>
+                        <rect x="110" y="180" width="150" height="6" rx="3" fill="#e0e0e0"/>
+                        <rect x="110" y="195" width="165" height="6" rx="3" fill="#e0e0e0"/>
+                        
+                        <!-- Decorative Elements -->
+                        <circle cx="320" cy="80" r="30" fill="rgba(150, 88, 207, 0.2)"/>
+                        <circle cx="70" cy="220" r="25" fill="rgba(150, 88, 207, 0.15)"/>
+                        <circle cx="350" cy="250" r="20" fill="rgba(150, 88, 207, 0.1)"/>
+                    </svg>
+                </div>
+                
+                <button class="signup-btn">
+                    
+                    <a class=" pp-color" style="color: var(--pp);" href="{% url 'account_signup' %}">Sign Up</a>/
+                    <a class="pp-color" style="color: var(--pp);" href="{% url 'account_login' %}">Log In</a>
+                    <svg style="width: 20px; height: 20px; margin-left: 8px; display: inline-block; vertical-align: middle;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Right Side - Login Form -->
+        <div class="login-section">
+            {% block form_space %}
+
+            {% endblock form_space %}
+        </div>
+    </div>
+    
+    <!-- Signup Overlay -->
+    
+    <!-- {% for fields in form %}
+        {{ fields.name }}
+    {% endfor %}
+    form-input -->
+    <!-- {{ form }} -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- {} -->
+</body>
+</html>

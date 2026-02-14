@@ -1,0 +1,144 @@
+{% extends 'user\base.html'%}
+{% block main %}
+    {% include "user/components/back_button.html"  %}
+
+<div class=" p-2  mx-0 bg-white rounded">
+    <div class="section">
+
+        {% if preference %}
+             <h2 class="section-title">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Seleted Topics
+             </h2>
+             <div class="options-grid mb-3" id="topics">
+             {% for p  in preference %}
+                  <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="{{p.id}}" checked>
+                        <span class="text-capitalize category-label">
+                            
+                            {{ p.name }}
+                        </span>
+                </label>
+             {% endfor %}
+             </div>
+        {% endif %}
+            <h2 class="section-title">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                {% if not preference %}
+                Topics of Interest
+                {% else %}
+                Change Topic Of Interest
+                {% endif %}
+            </h2>
+            <form class="preferences" action="{% url 'preferences' %}"  method="post">
+                {%  csrf_token %}
+             
+                <div class="options-grid" id="topics">
+                     {% for c in category %}
+            <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="{{c.id}}"  >
+                        <span class="text-capitalize category-label">
+                            
+                            {{ c.name }}
+                        </span>
+                </label>
+               
+            
+                {% endfor %}
+        
+                
+              
+                
+                
+            </div>
+                <button class="submit-btn mt-3" type="submit">Save</button>
+            </form>
+            
+        </div>
+      {% comment "form" %}
+       {% for field in form.category %}
+            {{ field }}
+         {% endfor %}
+      {% endcomment %}
+        
+        <!-- <form action="." method="post">
+           {% csrf_token %}
+            {{ form }}
+            <button>submit</button>
+        </form> -->
+</div>
+ 
+ <script>
+       // const form = new FormData()
+        //form.append("csrf_token","{{ csrf_token }}")
+       
+        let btn = document.querySelectorAll(".category-radio")
+        btn.forEach((b)=>{
+            b.addEventListener("click",handleClick)
+            
+        })
+
+        function handleClick() {
+           // console.log(this.getAttribute('data-value'),this.getAttribute("data-id"))
+            if (this.classList.contains("active")) {
+                this.classList.remove('active')
+             //   form.delete(this.getAttribute('data-value'),this.getAttribute("data-id"))
+    
+            }else{
+                   this.classList.add('active')
+           // form.append(this.getAttribute('data-value'),this.getAttribute("data-id"))
+            }
+         
+        }
+        
+
+//         // function setupSingleSelect(sectionId, dataKey) {
+//         //     var buttons = document.querySelectorAll('#' + sectionId + ' .option-btn');
+//         //     for (var i = 0; i < buttons.length; i++) {
+//         //         buttons[i].addEventListener('click', function() {
+//         //             var allButtons = document.querySelectorAll('#' + sectionId + ' .option-btn');
+//         //             for (var j = 0; j < allButtons.length; j++) {
+//         //                 allButtons[j].classList.remove('active');
+//         //             }
+//         //             this.classList.add('active');
+//         //             formData[dataKey] = this.getAttribute('data-value');
+//         //         });
+//         //     }
+//         // }
+
+   console.log(document.querySelector(".preferences"))
+  document.querySelector(".preferences").addEventListener("submit",function(e) {
+    console.log(this)
+    handleSubmit(e,this)
+    console.log("test")
+  } )
+  function handleSubmit(e,el) {
+    e.preventDefault()
+    form = new FormData(el)
+    fetch("{% url 'preferences' %}",{
+        method: 'POST',
+        body:  form
+    })
+    .then((response)=>{ response.json()})
+    .then((data)=>{console.log(data)})
+    .catch((error)=>{console.error();
+    })
+  }
+
+        // function handleSubmit() {
+           
+            
+        //     var successMsg = document.getElementById('successMessage');
+        //     successMsg.classList.add('show');
+            
+        //     setTimeout(function() {
+        //         successMsg.classList.remove('show');
+        //     }, 3000);
+        // }
+    </script>
+{% endblock %}
+    
