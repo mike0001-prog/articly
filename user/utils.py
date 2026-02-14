@@ -63,6 +63,7 @@ def get_complex_data(request):
         connected_user_ids.discard(request.user.id)
         print(f"user_connections_{request.user}")
         cache.set(f'user_connections_{request.user}', connected_user_ids,None) # Cache for 1 hour
+        data = connected_user_ids
     return data
 
 

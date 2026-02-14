@@ -15,6 +15,7 @@ from django.core.paginator import Paginator
 from django.core.cache import cache
 from .utils import decode_user_name
 from authentication.models import UserProfile
+from django.contrib import messages
 #from django.contrib.views
 # Create your views here.
 
@@ -215,6 +216,7 @@ def create_comment(request):
                 user_profile.flags+=1
                 user_profile.save()
                 created_comment.save()
+            messages.success(request,"your comment has been posted")
     return redirect("comment_page",slug=article.slug)
 
 def bookmarks_page(request):
