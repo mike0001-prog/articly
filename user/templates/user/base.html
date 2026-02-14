@@ -142,12 +142,12 @@
           style="border-bottom: 2px solid var(--bb)"
           class="p-0 d-flex justify-content-center p-3"
         >
+          {% if request.user.is_authenticated %}
           <a
             class="p-2"
             href="{% url 'user_profile' request.user.username|generate_token %}"
           >
             <div class="profile-photo">
-              {% if request.user.is_authenticated %}
               <img
                 loading="lazy"
                 style="
@@ -159,7 +159,12 @@
                 src="{{ request.user.userprofile.profile_photo.url}}"
                 alt="profile photo"
               />
-              {% else %}
+            </div>
+          </a>
+          {% else %}
+
+          <a class="p-2" href="">
+            <div class="profile-photo">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -172,10 +177,10 @@
                   clip-rule="evenodd"
                 />
               </svg>
-
-              {% endif %}
             </div>
           </a>
+
+          {% endif %}
         </div>
         <ul class="p-4 align-items-none">
           <a
@@ -305,8 +310,9 @@
       >
         {% block main %} {% endblock main %}
       </main>
-      {% for m in messages %} {% endfor %}
+
       <div class="toast-container" id="toastContainer">
+        {% for m in messages %}
         <div class="toast-message">
           <div class="toast-content">
             <div
@@ -352,6 +358,7 @@
             </button>
           </div>
         </div>
+        {% endfor %}
       </div>
       {% if request.user.is_authenticated %} {% if not saved_preferences %}
       <button
@@ -445,12 +452,18 @@
             style="border-bottom: 2px solid var(--bb)"
             class="d-flex justify-content-center p-0"
           >
+            {% if request.user.is_authenticated %}
             <a
               class="p-1"
               href="{% url 'user_profile' request.user|generate_token %}"
             >
               <div class="profile-photo"></div>
             </a>
+            {% else %}
+            <a class="p-1" href="">
+              <div class="profile-photo"></div>
+            </a>
+            {% endif %}
           </div>
           <ul class="p-3 align-items-none">
             <a
