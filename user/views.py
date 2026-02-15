@@ -216,6 +216,9 @@ def create_comment(request):
                 user_profile.flags+=1
                 user_profile.save()
                 created_comment.save()
+                messages.warning(request,"your comment has been posted and flagged")
+                return redirect("comment_page",slug=article.slug)
+
             messages.success(request,"your comment has been posted")
     return redirect("comment_page",slug=article.slug)
 

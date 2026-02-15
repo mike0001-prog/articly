@@ -120,6 +120,43 @@ height: 20px;
     color: var(--pp);
     font-weight: bolder;
 }
+/*see more*/
+.see-more-container {
+    padding: 0 24px 20px 24px;
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.see-more-btn {
+    background: var(--pp);
+    color: white;
+    border: none;
+    padding: 10px 32px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(150, 88, 207, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.see-more-btn:hover {
+    background: rgb(130, 68, 187);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(150, 88, 207, 0.4);
+}
+
+.see-more-btn svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+
 .acc-class label{
     color: var(--pp) !important; 
 }
@@ -227,7 +264,9 @@ li.active{
 }
 .hall{
     border: 2px groove var(--pp);
+    border-radius: 10pxx;
 }
+
 /* @media screen {
     main{
         padding: 0 !important;
