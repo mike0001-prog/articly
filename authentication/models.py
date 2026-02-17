@@ -38,7 +38,6 @@ class Prefrence(models.Model):
 #         return self.name
 
 
-from django.db import models
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 

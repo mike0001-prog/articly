@@ -44,7 +44,7 @@ class ProfileForm(forms.ModelForm):
     cover_photo = forms.ImageField(widget=forms.FileInput(attrs={"id":"coverInput","onchange":"handleCoverUpload(event)"}))
     profile_photo = forms.ImageField(widget=forms.FileInput(attrs={"id":"profileInput","onchange":"handleProfileUpload(event)"}))
    
-    bio = forms.CharField(widget=forms.Textarea(attrs={"class":"form-textarea",
+    bio = forms.CharField(min_length= 300, widget=forms.Textarea(attrs={"class":"form-textarea",
                                                        "id":"bio",
                                                        "placeholder":"Tell us about yourself, your interests, and what you're passionate about...",
                                                        }))

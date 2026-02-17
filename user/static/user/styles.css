@@ -364,13 +364,10 @@ li.active{
 .banner{
     height: 30vh;
     /* background: var(--pp); */
+}
+.banner-cover{
     border-bottom-left-radius: 50px;
     border-top-right-radius: 15px;
-    background-image: url("/static/user/test.jpg");
-    background-repeat: no-repeat;
-    background-position: 100%;
-    background-size: cover;
-    gap: 5px;
 }
 .banner-info ul{
     display: flex;

@@ -13,9 +13,10 @@ from django.forms.models import model_to_dict
 from django.db.models import Count, F,Sum,query
 from django.core.paginator import Paginator
 from django.core.cache import cache
-from .utils import decode_user_name
+from .utils import decode_user_name, get_complex_data
 from authentication.models import UserProfile
 from django.contrib import messages
+
 #from django.contrib.views
 # Create your views here.
 
@@ -41,6 +42,10 @@ def home(request):
     if request.user.is_authenticated:
         preference = Prefrence.objects.get(user=request.user).category.all()
         preferences_ids = preference.values_list("id",flat=True)
+        # mutual_connections = Connection.objects.filter( Q(receiver__in= get_complex_data(request)) | Q(sender__in = get_complex_data(request) )).exclude(Q(receiver = request.user) | Q(sender = request.user))
+      
+        # print(mutual_connections)
+
         # category = Category.objects.exclude(id__in = preferences).values_list("id",flat=True)
         articles =(Article.objects.exclude(category__in = preferences_ids )
                 .annotate(like_count=Count('like'))
@@ -76,6 +81,7 @@ def profile(request,uid):
                 .annotate(comment_count=Count('comment')).select_related("user__userprofile") )
     aggregate_likes_comment = Article.objects.filter(user = user ).aggregate(likes_sum=Count("like"),comment_sum=Count("comment"))
     print(aggregate_likes_comment)
+    print(Connection.objects.get_mutual_connections(user1=request.user,user2= user))
     context = {"user_profile":user_profile,"articles":articles,"aggregate":aggregate_likes_comment}
     # print(user_profile)
     return render(request,"user/profile.html",context)

@@ -15,7 +15,7 @@
         <img src="{{ a.user.userprofile.profile_photo.url }}" alt="" />
       </div>
       <div class="capitalize">
-        <div class="author-name">{{ a.user }}</div>
+        <div class="author-name"> <a href="{% url 'user_profile' a.user.username|generate_token %}">{{ a.user }}</a></div>
         <span class="author-role">{{ a.user.userprofile.category }}</span>
         <span class="author-role d-block">{{ a.time_created|timesince }}</span>
       </div>

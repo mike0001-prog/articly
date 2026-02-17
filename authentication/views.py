@@ -7,6 +7,7 @@ from .forms import ProfileForm,PrefrenceForm
 from django.contrib.auth.decorators import login_required
 from .models import Prefrence,UserProfile 
 from django.http import JsonResponse
+from django.contrib import messages
 
 def prefrences(request):
     preference_instance = Prefrence.objects.get(user=request.user)
@@ -49,6 +50,7 @@ def update_profile(request):
         if form.is_valid():
             print(form.is_valid())
             form.save()
+            messages.success(request,"sucessfully updated your profile")
             return redirect("update_profile")
     context = {"form":form,"profile":profile}
     return render(request,"account/update_profile.html",context)

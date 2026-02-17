@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Component with See More</title>
+    <title>People You May Know - Carousel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -18,384 +18,552 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         
-        /* Post Card */
-        .post {
-            border: none;
-            border-radius: 16px;
+        /* Carousel Container */
+        .connections-carousel-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
             background: white;
+            border-radius: 16px;
+            padding: 24px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-            max-width: 600px;
-            margin: 0 auto 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        .post:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1), 0 16px 32px rgba(0, 0, 0, 0.08);
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
         
-        .author-info {
-            padding: 20px;
-            border-bottom: 1px solid rgba(150, 88, 207, 0.15);
-            background: linear-gradient(to right, rgba(150, 88, 207, 0.02), transparent);
+        .carousel-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1c1e21;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        .author-photo {
-            width: 56px;
-            height: 56px;
+        .carousel-title svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--pp);
+        }
+        
+        .carousel-subtitle {
+            font-size: 13px;
+            color: #65676b;
+            margin-top: 4px;
+        }
+        
+        .carousel-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .carousel-nav-btn {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 3px solid var(--pp);
-            background: linear-gradient(135deg, var(--pp), #b794f6);
-            margin-right: 12px;
+            border: 2px solid rgba(150, 88, 207, 0.2);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-nav-btn:hover:not(:disabled) {
+            background: rgba(150, 88, 207, 0.1);
+            border-color: var(--pp);
+            transform: scale(1.1);
+        }
+        
+        .carousel-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .carousel-nav-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--pp);
+        }
+        
+        /* Carousel Track */
+        .carousel-container {
             position: relative;
             overflow: hidden;
         }
         
-        .author-photo::before {
+        .carousel-track {
+            display: flex;
+            gap: 16px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 4px;
+        }
+        
+        /* Connection Card */
+        .connection-card {
+            min-width: 280px;
+            background: white;
+            border: 2px solid rgba(150, 88, 207, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .connection-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(150, 88, 207, 0.2);
+            border-color: var(--pp);
+        }
+        
+        .card-image-section {
+            height: 180px;
+            background: linear-gradient(135deg, rgba(150, 88, 207, 0.1), rgba(150, 88, 207, 0.05));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                repeating-linear-gradient(45deg, var(--pp) 0, var(--pp) 1px, transparent 1px, transparent 10px),
+                repeating-linear-gradient(-45deg, var(--pp) 0, var(--pp) 1px, transparent 1px, transparent 10px);
+        }
+        
+        .user-profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            background: linear-gradient(135deg, var(--pp), #b794f6);
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .user-profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-profile-image::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 24px;
-            height: 24px;
+            width: 48px;
+            height: 48px;
             background: white;
             border-radius: 50%;
         }
         
-        .author-name {
-            font-weight: 600;
-            font-size: 16px;
-            color: #1c1e21;
-            margin-bottom: 2px;
-        }
-        
-        .author-role {
-            font-size: 13px;
-            color: #65676b;
-            font-weight: 400;
-        }
-        
-        .connect-btn {
-            background-color: var(--pp);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(150, 88, 207, 0.3);
-        }
-        
-        .connect-btn:hover {
-            background: rgb(130, 68, 187);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(150, 88, 207, 0.4);
-        }
-        
-        .connect-btn svg {
-            width: 18px;
-            height: 18px;
-        }
-        
-        /* Article Body with Max Height */
-        .article-body-wrapper {
-            position: relative;
-            padding: 24px;
-        }
-        
-        .article-body {
-            line-height: 1.6;
-            color: #050505;
-            max-height: 200px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .article-body.expanded {
-            max-height: none;
-        }
-        
-        .article-title {
-            color: var(--pp);
-            font-style: italic;
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 20px;
-        }
-        
-        .article-text {
-            font-size: 15px;
-            color: #1c1e21;
-        }
-        
-        /* Fade Overlay */
-        .fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 120px;
-            background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 0%, 
-                rgba(255, 255, 255, 0.7) 40%, 
-                rgba(255, 255, 255, 0.95) 70%, 
-                rgba(255, 255, 255, 1) 100%);
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .article-body.expanded + .fade-overlay {
-            opacity: 0;
-        }
-        
-        /* See More Button */
-        .see-more-container {
-            padding: 0 24px 20px 24px;
-            display: flex;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .see-more-btn {
-            background: var(--pp);
-            color: white;
-            border: none;
-            padding: 10px 32px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(150, 88, 207, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .see-more-btn:hover {
-            background: rgb(130, 68, 187);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(150, 88, 207, 0.4);
-        }
-        
-        .see-more-btn svg {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.3s ease;
-        }
-        
-        .see-more-btn.expanded svg {
-            transform: rotate(180deg);
-        }
-        
-        .see-more-btn.hidden {
+        .user-profile-image.has-image::before {
             display: none;
         }
         
-        /* Actions */
-        .actions {
-            padding: 16px 24px;
-            border-top: 1px solid rgba(150, 88, 207, 0.15);
-            background: rgba(150, 88, 207, 0.02);
+        .card-content {
+            padding: 50px 20px 20px;
+            text-align: center;
         }
         
-        .action-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .user-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1c1e21;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+        
+        .user-level {
+            font-size: 13px;
+            color: var(--pp);
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(150, 88, 207, 0.1);
+            border-radius: 12px;
+        }
+        
+        .mutual-friends {
+            font-size: 12px;
+            color: #65676b;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1;
+            gap: 6px;
         }
         
-        .action-btn:hover {
-            background: rgba(150, 88, 207, 0.1);
-            transform: scale(1.05);
+        .mutual-friends svg {
+            width: 16px;
+            height: 16px;
+            fill: #65676b;
         }
         
-        .action-btn svg {
-            width: 24px;
+        .mutual-avatars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
             height: 24px;
-            stroke: var(--pp);
-            transition: all 0.3s ease;
         }
         
-        .action-btn:hover svg {
-            stroke: rgb(130, 68, 187);
-            transform: scale(1.1);
+        .mutual-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background: linear-gradient(135deg, var(--pp), #b794f6);
+            margin-left: -8px;
+            position: relative;
+        }
+        
+        .mutual-avatar:first-child {
+            margin-left: 0;
+        }
+        
+        .mutual-avatar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-button {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .connect-button {
+            background: linear-gradient(135deg, var(--pp), #b794f6);
+            color: white;
+            box-shadow: 0 2px 8px rgba(150, 88, 207, 0.3);
+        }
+        
+        .connect-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(150, 88, 207, 0.4);
+        }
+        
+        .remove-button {
+            background: transparent;
+            color: #65676b;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .remove-button:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #1c1e21;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .connection-card {
+                min-width: 240px;
+            }
+            
+            .carousel-controls {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .connection-card {
+                min-width: 260px;
+            }
+            
+            .connections-carousel-wrapper {
+                padding: 16px;
+            }
+            
+            .carousel-title {
+                font-size: 18px;
+            }
+        }
+        
+        /* Smooth scrolling for touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .carousel-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+            }
+            
+            .carousel-container::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .connection-card {
+                scroll-snap-align: start;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Post 1 - Short Content (No See More) -->
-        <div class="post">
-            <div class="author-info d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <div class="author-photo"></div>
-                    <div>
-                        <div class="author-name">Oyeniyi Kehinde</div>
-                        <span class="author-role">Master</span>
-                    </div>
-                </div>
+        <div class="connections-carousel-wrapper">
+            <!-- Header -->
+            <div class="carousel-header">
                 <div>
-                    <button class="connect-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
+                    <h2 class="carousel-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                            <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
                         </svg>
-                        Connect
+                        People You May Know
+                    </h2>
+                    <p class="carousel-subtitle">Connect with writers in your network</p>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-nav-btn" id="prevBtn" onclick="slideCarousel(-1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </button>
+                    <button class="carousel-nav-btn" id="nextBtn" onclick="slideCarousel(1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
                     </button>
                 </div>
             </div>
             
-            <div class="article-body-wrapper">
-                <div class="article-body" id="articleBody1">
-                    <div class="article-title">Quick Thoughts on Design</div>
-                    <div class="article-text">
-                        Design is not just what it looks like and feels like. Design is how it works. Keep it simple and functional.
+            <!-- Carousel -->
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Card 1 -->
+                    <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">Sarah Chen</h3>
+                            <span class="user-level">Master</span>
+                            <div class="mutual-friends">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                                </svg>
+                                5 mutual connections
+                            </div>
+                            <div class="mutual-avatars">
+                                <div class="mutual-avatar"></div>
+                                <div class="mutual-avatar"></div>
+                                <div class="mutual-avatar"></div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
+                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">Michael Torres</h3>
+                            <span class="user-level">Expert</span>
+                            <div class="mutual-friends">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                                </svg>
+                                8 mutual connections
+                            </div>
+                            <div class="mutual-avatars">
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
+                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 3 -->
+                    <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">Emma Williams</h3>
+                            <span class="user-level">Contributor</span>
+                            <div class="mutual-friends">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                                </svg>
+                                3 mutual connections
+                            </div>
+                            <div class="mutual-avatars">
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
+                                <div class="mutual-avatar"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
+                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 4 -->
+                    <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">Alex Kumar</h3>
+                            <span class="user-level">Senior Writer</span>
+                            <div class="mutual-friends">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                                </svg>
+                                12 mutual connections
+                            </div>
+                            <div class="mutual-avatars">
+                                <div class="mutual-avatar"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
+                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 5 -->
+                    <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">Jessica Lee</h3>
+                            <span class="user-level">Master</span>
+                            <div class="mutual-friends">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                                </svg>
+                                7 mutual connections
+                            </div>
+                            <div class="mutual-avatars">
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
+                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
+                                <div class="mutual-avatar"></div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
+                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="actions d-flex justify-content-around">
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-                    </svg>
-                </button>
-                
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                    </svg>
-                </button>
-                
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Post 2 - Long Content (With See More) -->
-        <div class="post">
-            <div class="author-info d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <div class="author-photo" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
-                    <div>
-                        <div class="author-name">Sarah Johnson</div>
-                        <span class="author-role">Senior Developer</span>
-                    </div>
-                </div>
-                <div>
-                    <button class="connect-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
-                        </svg>
-                        Connect
-                    </button>
-                </div>
-            </div>
-            
-            <div class="article-body-wrapper">
-                <div class="article-body" id="articleBody2">
-                    <div class="article-title">The Future of Web Development in 2026</div>
-                    <div class="article-text">
-                        Web development has undergone remarkable transformations over the past decade. As we move through 2026, several key trends are shaping the future of how we build and interact with web applications.
-                        <br><br>
-                        Artificial intelligence continues to play an increasingly central role in development workflows. AI-powered coding assistants have evolved from simple autocomplete tools to sophisticated partners that can understand context, suggest architectural improvements, and even refactor entire codebases while maintaining best practices.
-                        <br><br>
-                        The rise of edge computing has fundamentally changed how we think about web application architecture. Rather than relying solely on centralized servers, modern applications distribute computation closer to users, resulting in dramatically improved performance and user experiences across the globe.
-                        <br><br>
-                        WebAssembly has matured into a first-class citizen of the web platform, enabling developers to bring high-performance applications written in languages like Rust, C++, and Go directly to the browser. This has opened up entirely new categories of web applications, from sophisticated 3D modeling tools to real-time video editing suites.
-                        <br><br>
-                        Progressive Web Apps (PWAs) have reached mainstream adoption, blurring the lines between web and native applications. With improved offline capabilities, push notifications, and seamless integration with device features, PWAs offer users native-like experiences while maintaining the reach and accessibility of the web.
-                    </div>
-                </div>
-                <div class="fade-overlay" id="fadeOverlay2"></div>
-            </div>
-            
-            <div class="see-more-container">
-                <button class="see-more-btn" id="seeMoreBtn2" onclick="toggleContent('articleBody2', 'seeMoreBtn2', 'fadeOverlay2')">
-                    See More
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                </button>
-            </div>
-            
-            <div class="actions d-flex justify-content-around">
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
-                    </svg>
-                </button>
-                
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
-                    </svg>
-                </button>
-                
-                <button class="action-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                    </svg>
-                </button>
             </div>
         </div>
     </div>
     
     <script>
-        function toggleContent(bodyId, btnId, overlayId) {
-            const articleBody = document.getElementById(bodyId);
-            const seeMoreBtn = document.getElementById(btnId);
-            const fadeOverlay = document.getElementById(overlayId);
-            
-            if (articleBody.classList.contains('expanded')) {
-                // Collapse
-                articleBody.classList.remove('expanded');
-                seeMoreBtn.classList.remove('expanded');
-                seeMoreBtn.innerHTML = `
-                    See More
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                `;
-                // Scroll back to post
-                articleBody.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                // Expand
-                articleBody.classList.add('expanded');
-                seeMoreBtn.classList.add('expanded');
-                seeMoreBtn.innerHTML = `
-                    See Less
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 16px; height: 16px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                `;
-            }
+        let currentPosition = 0;
+        const cardWidth = 296; // 280px + 16px gap
+        const track = document.getElementById('carouselTrack');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        function updateButtons() {
+            const maxScroll = -(track.children.length - 3) * cardWidth;
+            prevBtn.disabled = currentPosition >= 0;
+            nextBtn.disabled = currentPosition <= maxScroll;
         }
         
-        // Auto-hide see more button for short content
-        document.addEventListener('DOMContentLoaded', function() {
-            const articleBody1 = document.getElementById('articleBody1');
-            if (articleBody1 && articleBody1.scrollHeight <= 200) {
-                // Content is short, no need for see more button
-                // (Already not shown in this example)
-            }
+        function slideCarousel(direction) {
+            const visibleCards = window.innerWidth < 992 ? 1 : 3;
+            const maxScroll = -(track.children.length - visibleCards) * cardWidth;
+            
+            currentPosition += direction * cardWidth;
+            currentPosition = Math.max(maxScroll, Math.min(0, currentPosition));
+            
+            track.style.transform = `translateX(${currentPosition}px)`;
+            updateButtons();
+        }
+        
+        function connectUser(button) {
+            const card = button.closest('.connection-card');
+            const userName = card.querySelector('.user-name').textContent;
+            
+            button.textContent = 'Connected';
+            button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    card.remove();
+                    updateButtons();
+                }, 300);
+            }, 1000);
+        }
+        
+        function removeUser(button) {
+            const card = button.closest('.connection-card');
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                card.remove();
+                updateButtons();
+            }, 300);
+        }
+        
+        // Initialize
+        updateButtons();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            currentPosition = 0;
+            track.style.transform = `translateX(0px)`;
+            updateButtons();
         });
     </script>
 </body>
