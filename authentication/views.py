@@ -51,7 +51,7 @@ def update_profile(request):
             print(form.is_valid())
             form.save()
             messages.success(request,"sucessfully updated your profile")
-            return redirect("update_profile")
+            return redirect("user_home")
     context = {"form":form,"profile":profile}
     return render(request,"account/update_profile.html",context)
 # from .forms import CustomSignupForm,CustomLoginForm
