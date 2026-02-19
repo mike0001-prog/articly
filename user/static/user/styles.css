@@ -264,7 +264,7 @@ li.active{
 }
 .hall{
     border: 2px groove var(--pp);
-    border-radius: 10pxx;
+    border-radius: 10px;
 }
 
 /* @media screen {

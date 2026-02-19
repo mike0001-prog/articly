@@ -19,13 +19,14 @@ from django.urls import path,include
 from authentication import views
 from django.conf import settings
 from django.conf.urls.static import static
+from user import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include("user.urls")),
     path('accounts/', include('allauth.urls')),
     path('accounts/', include('allauth.socialaccount.urls')),
     path('auth/',include('authentication.urls')),
-    path("", views.landing_page, name="landing_page"),
+    path("", views.home),
     path("ckeditor5/", include('django_ckeditor_5.urls'))
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
