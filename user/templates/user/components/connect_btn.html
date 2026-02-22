@@ -1,0 +1,48 @@
+<form
+        class="connect_user"
+        action="{% url 'connect_user' %}"
+        method="post"
+      >
+        <input type="hidden" name="author" value="{{ a.user }}" />
+        {% csrf_token %}
+        <!-- <span> author {{ a.user }}</span>
+                        
+                        <span>logged {{ request.user }} </span> -->
+        {% if request.user.is_authenticated %} 
+        
+        {% if not request.user == a.user%} 
+        {% if a.user.id in connections %}
+        <button class="connect-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Disconnect
+        </button>
+        {% else %}
+
+        <button class="connect-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Connect
+        </button>
+
+        {% endif %} {% endif %} {% endif %}
+      </form>

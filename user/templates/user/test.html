@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>People You May Know - Carousel</title>
+    <title>Pagination Navigator</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
@@ -18,53 +18,43 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         
-        /* Carousel Container */
-        .connections-carousel-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Pagination Container */
+        .pagination-wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .pagination-container {
             background: white;
             border-radius: 16px;
-            padding: 24px;
+            padding: 16px 24px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 20px rgba(0, 0, 0, 0.06);
-        }
-        
-        .carousel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .carousel-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1c1e21;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .carousel-title svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--pp);
-        }
-        
-        .carousel-subtitle {
-            font-size: 13px;
-            color: #65676b;
-            margin-top: 4px;
-        }
-        
-        .carousel-controls {
-            display: flex;
             gap: 8px;
         }
         
-        .carousel-nav-btn {
-            width: 40px;
+        /* Page Info */
+        .page-info {
+            padding: 0 12px;
+            font-size: 14px;
+            color: #65676b;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .page-info .current-page {
+            color: var(--pp);
+            font-weight: 700;
+        }
+        
+        /* Navigation Buttons */
+        .page-btn {
+            min-width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 10px;
             border: 2px solid rgba(150, 88, 207, 0.2);
             background: white;
             display: flex;
@@ -72,499 +62,312 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1c1e21;
+            text-decoration: none;
+            padding: 0 12px;
         }
         
-        .carousel-nav-btn:hover:not(:disabled) {
+        .page-btn:hover:not(:disabled):not(.active) {
             background: rgba(150, 88, 207, 0.1);
             border-color: var(--pp);
-            transform: scale(1.1);
+            color: var(--pp);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(150, 88, 207, 0.2);
         }
         
-        .carousel-nav-btn:disabled {
+        .page-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .page-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+            border-color: rgba(0, 0, 0, 0.1);
         }
         
-        .carousel-nav-btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: var(--pp);
-        }
-        
-        /* Carousel Track */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .carousel-track {
-            display: flex;
-            gap: 16px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 4px;
-        }
-        
-        /* Connection Card */
-        .connection-card {
-            min-width: 280px;
-            background: white;
-            border: 2px solid rgba(150, 88, 207, 0.15);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        
-        .connection-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 20px rgba(150, 88, 207, 0.2);
-            border-color: var(--pp);
-        }
-        
-        .card-image-section {
-            height: 180px;
-            background: linear-gradient(135deg, rgba(150, 88, 207, 0.1), rgba(150, 88, 207, 0.05));
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card-background-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            background-image: 
-                repeating-linear-gradient(45deg, var(--pp) 0, var(--pp) 1px, transparent 1px, transparent 10px),
-                repeating-linear-gradient(-45deg, var(--pp) 0, var(--pp) 1px, transparent 1px, transparent 10px);
-        }
-        
-        .user-profile-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 5px solid white;
+        .page-btn.active {
             background: linear-gradient(135deg, var(--pp), #b794f6);
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            z-index: 2;
+            color: white;
+            border-color: var(--pp);
+            box-shadow: 0 4px 12px rgba(150, 88, 207, 0.3);
         }
         
-        .user-profile-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .page-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
         }
         
-        .user-profile-image::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .user-profile-image.has-image::before {
-            display: none;
-        }
-        
-        .card-content {
-            padding: 50px 20px 20px;
-            text-align: center;
-        }
-        
-        .user-name {
-            font-size: 16px;
+        /* Arrow Buttons */
+        .arrow-btn {
             font-weight: 700;
-            color: #1c1e21;
-            margin-bottom: 4px;
-            text-transform: capitalize;
         }
         
-        .user-level {
-            font-size: 13px;
-            color: var(--pp);
-            font-weight: 600;
-            margin-bottom: 12px;
-            display: inline-block;
-            padding: 4px 12px;
-            background: rgba(150, 88, 207, 0.1);
-            border-radius: 12px;
+        .arrow-btn.first,
+        .arrow-btn.last {
+            position: relative;
         }
         
-        .mutual-friends {
-            font-size: 12px;
-            color: #65676b;
-            margin-bottom: 16px;
+        .arrow-btn.first svg:first-child,
+        .arrow-btn.last svg:last-child {
+            position: absolute;
+        }
+        
+        .arrow-btn.first svg:first-child {
+            left: 8px;
+        }
+        
+        .arrow-btn.last svg:last-child {
+            right: 8px;
+        }
+        
+        /* Ellipsis */
+        .ellipsis {
+            min-width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-        }
-        
-        .mutual-friends svg {
-            width: 16px;
-            height: 16px;
-            fill: #65676b;
-        }
-        
-        .mutual-avatars {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 16px;
-            height: 24px;
-        }
-        
-        .mutual-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid white;
-            background: linear-gradient(135deg, var(--pp), #b794f6);
-            margin-left: -8px;
-            position: relative;
-        }
-        
-        .mutual-avatar:first-child {
-            margin-left: 0;
-        }
-        
-        .mutual-avatar::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-radius: 50%;
-        }
-        
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .action-button {
-            flex: 1;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-        }
-        
-        .connect-button {
-            background: linear-gradient(135deg, var(--pp), #b794f6);
-            color: white;
-            box-shadow: 0 2px 8px rgba(150, 88, 207, 0.3);
-        }
-        
-        .connect-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(150, 88, 207, 0.4);
-        }
-        
-        .remove-button {
-            background: transparent;
             color: #65676b;
-            border: 2px solid rgba(0, 0, 0, 0.1);
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 2px;
         }
         
-        .remove-button:hover {
-            background: rgba(0, 0, 0, 0.05);
-            color: #1c1e21;
+        /* Compact Version for Mobile */
+        .pagination-compact {
+            display: none;
         }
         
-        /* Responsive */
-        @media (max-width: 992px) {
-            .connection-card {
-                min-width: 240px;
-            }
-            
-            .carousel-controls {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .connection-card {
-                min-width: 260px;
-            }
-            
-            .connections-carousel-wrapper {
-                padding: 16px;
-            }
-            
-            .carousel-title {
-                font-size: 18px;
-            }
-        }
-        
-        /* Smooth scrolling for touch devices */
-        @media (hover: none) and (pointer: coarse) {
-            .carousel-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scroll-snap-type: x mandatory;
-                scrollbar-width: none;
-            }
-            
-            .carousel-container::-webkit-scrollbar {
+        @media (max-width: 768px) {
+            .pagination-full {
                 display: none;
             }
             
-            .connection-card {
-                scroll-snap-align: start;
+            .pagination-compact {
+                display: flex;
             }
+            
+            .pagination-container {
+                padding: 12px 16px;
+                gap: 12px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .page-btn {
+                min-width: 44px;
+                height: 44px;
+            }
+        }
+        
+        /* Alternative Style - Pills */
+        .pagination-pills .page-btn {
+            border-radius: 20px;
+        }
+        
+        /* Alternative Style - Minimal */
+        .pagination-minimal .page-btn {
+            border: none;
+            background: transparent;
+        }
+        
+        .pagination-minimal .page-btn:hover:not(:disabled):not(.active) {
+            background: rgba(150, 88, 207, 0.1);
+        }
+        
+        .pagination-minimal .page-btn.active {
+            background: var(--pp);
+        }
+        
+        /* Demo Container */
+        .demo-section {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .demo-section h3 {
+            color: var(--pp);
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+        
+        .demo-section p {
+            color: #65676b;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="connections-carousel-wrapper">
-            <!-- Header -->
-            <div class="carousel-header">
-                <div>
-                    <h2 class="carousel-title">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                            <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+        <!-- Demo Section 1: Default Pagination -->
+        <div class="demo-section">
+            <h3>Default Pagination</h3>
+            <p>Classic pagination with page numbers and navigation arrows</p>
+            
+            <div class="pagination-wrapper">
+                <div class="pagination-container pagination-full">
+                    <!-- First Page -->
+                    <a href="?page=1" class="page-btn arrow-btn first" title="First Page">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
                         </svg>
-                        People You May Know
-                    </h2>
-                    <p class="carousel-subtitle">Connect with writers in your network</p>
+                    </a>
+                    
+                    <!-- Previous Page -->
+                    <a href="?page=2" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </a>
+                    
+                    <!-- Page Numbers -->
+                    <a href="?page=1" class="page-btn">1</a>
+                    <a href="?page=2" class="page-btn">2</a>
+                    <a href="?page=3" class="page-btn active">3</a>
+                    <a href="?page=4" class="page-btn">4</a>
+                    <a href="?page=5" class="page-btn">5</a>
+                    <span class="ellipsis">...</span>
+                    <a href="?page=10" class="page-btn">10</a>
+                    
+                    <!-- Next Page -->
+                    <a href="?page=4" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                    
+                    <!-- Last Page -->
+                    <a href="?page=10" class="page-btn arrow-btn last" title="Last Page">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
                 </div>
-                <div class="carousel-controls">
-                    <button class="carousel-nav-btn" id="prevBtn" onclick="slideCarousel(-1)">
+                
+                <!-- Mobile Compact Version -->
+                <div class="pagination-container pagination-compact">
+                    <a href="?page=2" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </a>
+                    
+                    <div class="page-info">
+                        Page <span class="current-page">3</span> of 10
+                    </div>
+                    
+                    <a href="?page=4" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Demo Section 2: Pills Style -->
+        <div class="demo-section">
+            <h3>Pills Style Pagination</h3>
+            <p>Rounded pill-shaped buttons for a softer look</p>
+            
+            <div class="pagination-wrapper">
+                <div class="pagination-container pagination-pills pagination-full">
+                    <a href="?page=1" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                        Prev
+                    </a>
+                    
+                    <a href="?page=1" class="page-btn">1</a>
+                    <a href="?page=2" class="page-btn active">2</a>
+                    <a href="?page=3" class="page-btn">3</a>
+                    <a href="?page=4" class="page-btn">4</a>
+                    <a href="?page=5" class="page-btn">5</a>
+                    
+                    <a href="?page=3" class="page-btn arrow-btn">
+                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                </div>
+                
+                <div class="pagination-container pagination-pills pagination-compact">
+                    <a href="?page=1" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </a>
+                    
+                    <div class="page-info">
+                        <span class="current-page">2</span> / 5
+                    </div>
+                    
+                    <a href="?page=3" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Demo Section 3: Minimal Style -->
+        <div class="demo-section">
+            <h3>Minimal Style Pagination</h3>
+            <p>Clean minimal design with no borders</p>
+            
+            <div class="pagination-wrapper">
+                <div class="pagination-container pagination-minimal pagination-full">
+                    <button class="page-btn arrow-btn" disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                         </svg>
                     </button>
-                    <button class="carousel-nav-btn" id="nextBtn" onclick="slideCarousel(1)">
+                    
+                    <a href="?page=1" class="page-btn active">1</a>
+                    <a href="?page=2" class="page-btn">2</a>
+                    <a href="?page=3" class="page-btn">3</a>
+                    
+                    <a href="?page=2" class="page-btn arrow-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                         </svg>
-                    </button>
+                    </a>
                 </div>
-            </div>
-            
-            <!-- Carousel -->
-            <div class="carousel-container">
-                <div class="carousel-track" id="carouselTrack">
-                    <!-- Card 1 -->
-                    <div class="connection-card">
-                        <div class="card-image-section">
-                            <div class="card-background-pattern"></div>
-                            <div class="user-profile-image"></div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="user-name">Sarah Chen</h3>
-                            <span class="user-level">Master</span>
-                            <div class="mutual-friends">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                                </svg>
-                                5 mutual connections
-                            </div>
-                            <div class="mutual-avatars">
-                                <div class="mutual-avatar"></div>
-                                <div class="mutual-avatar"></div>
-                                <div class="mutual-avatar"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
-                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
-                            </div>
-                        </div>
+                
+                <div class="pagination-container pagination-minimal pagination-compact">
+                    <button class="page-btn arrow-btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </button>
+                    
+                    <div class="page-info">
+                        <span class="current-page">1</span> of 3
                     </div>
                     
-                    <!-- Card 2 -->
-                    <div class="connection-card">
-                        <div class="card-image-section">
-                            <div class="card-background-pattern"></div>
-                            <div class="user-profile-image" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="user-name">Michael Torres</h3>
-                            <span class="user-level">Expert</span>
-                            <div class="mutual-friends">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                                </svg>
-                                8 mutual connections
-                            </div>
-                            <div class="mutual-avatars">
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
-                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 3 -->
-                    <div class="connection-card">
-                        <div class="card-image-section">
-                            <div class="card-background-pattern"></div>
-                            <div class="user-profile-image" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="user-name">Emma Williams</h3>
-                            <span class="user-level">Contributor</span>
-                            <div class="mutual-friends">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                                </svg>
-                                3 mutual connections
-                            </div>
-                            <div class="mutual-avatars">
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
-                                <div class="mutual-avatar"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
-                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 4 -->
-                    <div class="connection-card">
-                        <div class="card-image-section">
-                            <div class="card-background-pattern"></div>
-                            <div class="user-profile-image" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="user-name">Alex Kumar</h3>
-                            <span class="user-level">Senior Writer</span>
-                            <div class="mutual-friends">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                                </svg>
-                                12 mutual connections
-                            </div>
-                            <div class="mutual-avatars">
-                                <div class="mutual-avatar"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #10b981, #34d399);"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
-                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Card 5 -->
-                    <div class="connection-card">
-                        <div class="card-image-section">
-                            <div class="card-background-pattern"></div>
-                            <div class="user-profile-image" style="background: linear-gradient(135deg, #ef4444, #f87171);"></div>
-                        </div>
-                        <div class="card-content">
-                            <h3 class="user-name">Jessica Lee</h3>
-                            <span class="user-level">Master</span>
-                            <div class="mutual-friends">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
-                                </svg>
-                                7 mutual connections
-                            </div>
-                            <div class="mutual-avatars">
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);"></div>
-                                <div class="mutual-avatar" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);"></div>
-                                <div class="mutual-avatar"></div>
-                            </div>
-                            <div class="card-actions">
-                                <button class="action-button connect-button" onclick="connectUser(this)">Connect</button>
-                                <button class="action-button remove-button" onclick="removeUser(this)">Remove</button>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="?page=2" class="page-btn arrow-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
+        
+        <!-- Django Template Example -->
+       
     </div>
-    
-    <script>
-        let currentPosition = 0;
-        const cardWidth = 296; // 280px + 16px gap
-        const track = document.getElementById('carouselTrack');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        
-        function updateButtons() {
-            const maxScroll = -(track.children.length - 3) * cardWidth;
-            prevBtn.disabled = currentPosition >= 0;
-            nextBtn.disabled = currentPosition <= maxScroll;
-        }
-        
-        function slideCarousel(direction) {
-            const visibleCards = window.innerWidth < 992 ? 1 : 3;
-            const maxScroll = -(track.children.length - visibleCards) * cardWidth;
-            
-            currentPosition += direction * cardWidth;
-            currentPosition = Math.max(maxScroll, Math.min(0, currentPosition));
-            
-            track.style.transform = `translateX(${currentPosition}px)`;
-            updateButtons();
-        }
-        
-        function connectUser(button) {
-            const card = button.closest('.connection-card');
-            const userName = card.querySelector('.user-name').textContent;
-            
-            button.textContent = 'Connected';
-            button.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                card.style.opacity = '0';
-                card.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    card.remove();
-                    updateButtons();
-                }, 300);
-            }, 1000);
-        }
-        
-        function removeUser(button) {
-            const card = button.closest('.connection-card');
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                card.remove();
-                updateButtons();
-            }, 300);
-        }
-        
-        // Initialize
-        updateButtons();
-        
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            currentPosition = 0;
-            track.style.transform = `translateX(0px)`;
-            updateButtons();
-        });
-    </script>
 </body>
 </html>

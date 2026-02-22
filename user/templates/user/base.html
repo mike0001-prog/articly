@@ -10,7 +10,8 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="{% static 'user/styles.css'%}" />
+    <link rel="stylesheet" href="{% static 'user/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'user/style__2.css' %}" />
     <link rel="stylesheet" href="{% static 'user/article_content.css' %}" />
     <title>{% block title %} {% endblock title %}</title>
   </head>
@@ -302,6 +303,15 @@
               >
             </div>
           </div>
+           <a class="text-decoration-none" href="{% url 'connections_list' %}">
+              <li class="pp-color-bold">
+                Connections
+                <svg width="1.5rem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037.75.75 0 0 1-.646 1.353 5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353 5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-1.035-6.037.75.75 0 0 1-.354-1Z" clip-rule="evenodd" />
+</svg>
+
+              </li>
+            </a>
           <a class="text-decoration-none" href="{% url 'account_logout' %}">
             <li class="pp-color-bold">
               Log out
@@ -443,7 +453,20 @@
               class="p-1"
               href="{% url 'user_profile' request.user|generate_token %}"
             >
-              <div class="profile-photo"></div>
+              <div class="profile-photo">
+                <img
+                loading="lazy"
+                style="
+                  height: 100%;
+                  width: 100%;
+                  object-fit: cover;
+                  border-radius: 50%;
+                "
+                src="{{ request.user.userprofile.profile_photo.url}}"
+                alt="profile photo"
+              />
+
+              </div>
             </a>
             {% else %}
             <a class="p-1" href="">
@@ -550,6 +573,24 @@
                 >
               </div>
             </div>
+            <a class="text-decoration-none" href="{% url 'connections_list' %}">
+              <li class="pp-color-bold">
+                Connections
+                <svg
+                  width="1.5rem"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-4.28 9.22a.75.75 0 0 0 0 1.06l3 3a.75.75 0 1 0 1.06-1.06l-1.72-1.72h5.69a.75.75 0 0 0 0-1.5h-5.69l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </li>
+            </a>
             <a class="text-decoration-none" href="{% url 'account_logout' %}">
               <li class="pp-color-bold">
                 Log out
@@ -817,7 +858,7 @@
         $(".connect_user").on("submit", function (e) {
           e.preventDefault();
           let btn = $(this).children();
-          $(this).ch;
+          // $(this).ch;
           $.ajax({
             type: $(this).attr("method"),
             url: $(this).attr("action"),
@@ -965,5 +1006,6 @@
         }
       });
     </script>
+  <script defer src="{% static 'user/article.js' %}"></script>
   </body>
 </html>

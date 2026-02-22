@@ -10,10 +10,14 @@
         <span class="author-role"
           >{{ bookmark.user.userprofile.category }}</span
         >
-        <span class="author-role d-block"
-          >{{ bookmark.article.content|truncate:10 }}
-          <a href="{% url 'comment_page' bookmark.article.id %}">See more</a>
-        </span>
+          <a class="text-decoration-none" href="{% url 'comment_page' bookmark.article.id %}">
+
+           <span class="author-role d-block"
+          >{{ bookmark.article.title }}
+        </span> 
+          </a>
+
+        
       </div>
     </div>
     <div>

@@ -21,69 +21,8 @@
       </div>
     </div>
     <div>
-      <form
-        class="connect_user"
-        action="{% url 'connect_user' %}"
-        method="post"
-      >
-        <input type="hidden" name="author" value="{{ a.user }}" />
-        {% csrf_token %}
-        <!-- <span> author {{ a.user }}</span>
-                        
-                        <span>logged {{ request.user }} </span> -->
-        {% if request.user.is_authenticated %} 
-        
-        {% if not request.user == a.user%} {% if a.user.id in connections %}
-        <button class="connect-btn">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="size-6"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Disconnect
-        </button>
-        {% else %}
-
-        <button class="connect-btn">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          Connect
-        </button>
-        <!-- {% for c in  connections %}
-                {% if  c.reciever == a.user or  c.sender == a.user %}
-                      <button class="connect-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z" clip-rule="evenodd" />
-                        </svg>
-                        Disconnect
-                    </button>
-                {% else %}
-                  <button class="connect-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
-                        </svg>
-                        Connect
-                    </button>
-                {% endif %}
-            {% endfor %} -->
-        {% endif %} {% endif %} {% endif %}
-      </form>
+      {% include "user\components\connect_btn.html" %}
+      
     </div>
   </div>
   {% if a.is_flagged %}
@@ -94,15 +33,18 @@
   {% else %}
   <div class="article-body">
     <div class="article-title text-uppercase">{{ a.title }}</div>
-    <div class="article-text" style="max-height:300px; overflow-x: hidden;">
+    <div class="article-text"   id="articleBody{{ forloop.counter }}">
       {{ a.content|safe }}
 
       <!-- {% if a.content|count > 25 %}
                    <a href="{% url 'comment_page' a.slug %}">See more</a>
                    {% endif %} -->
+                   
+          <div class="fade-overlay" id="fadeOverlay{{ forloop.counter }}"></div>
+                 
     </div>
-    <div class="see-more-container">
-                <button class="see-more-btn" >
+    <div class="see-more-container" id="seeMoreContainer{{ forloop.counter }}" >
+<button class="see-more-btn" id="seeMoreBtn{{ forloop.counter }}" onclick="toggleContent('articleBody{{ forloop.counter }}', 'seeMoreBtn{{ forloop.counter }}', 'fadeOverlay{{ forloop.counter }}')" >
                     See More
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />

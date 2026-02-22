@@ -47,7 +47,8 @@ def home(request):
         # print(mutual_connections)
 
         # category = Category.objects.exclude(id__in = preferences).values_list("id",flat=True)
-        articles =(Article.objects.exclude(category__in = preferences_ids )
+        user_connection = [id for id in get_complex_data(request)]
+        articles =(Article.objects.filter(Q(category__in = preferences_ids) | Q(user__in = user_connection ) )
                 .annotate(like_count=Count('like'))
                 .annotate(comment_count=Count('comment')).select_related("user__userprofile") )
         context = {"category":categories ,
@@ -61,8 +62,12 @@ def home(request):
         print(preference)
     else:
         articles = Article.objects.all()
+        paginator = Paginator(articles,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-               "articles":articles,
+               "articles":page_obj,
                "top_articles": top_articles,
            
                 "home":True
@@ -112,7 +117,7 @@ def connect(request):
 #     def form_valid(self, form):
 #         return super().form_valid(form)
 
-
+from .utils import parse_and_clean_article_content
 @login_required
 def create_post(request):
     form = ArticleForm()
@@ -122,13 +127,14 @@ def create_post(request):
         if form.is_valid():
             pre_save = form.save(commit=False)
             pre_save.user = request.user
-            filter_and_clean_bad_word = filter_bad_words(text=form.cleaned_data["content"])
+            filter_and_clean_bad_word = parse_and_clean_article_content(form.cleaned_data["content"])
             # cleaned_article_content = filter_and_clean_bad_word[0]
-            is_bad_word = filter_and_clean_bad_word[1]
+            is_bad_word = filter_and_clean_bad_word[0]
             if is_bad_word:
+                print("bad")
                 pre_save.is_flagged = True
                 pre_save.save()
-                user = User.objects.get(username=request.user)
+                user = UserProfile.objects.get(user=User.objects.get(username=request.user))
                 user.flags+=1
                 user.save()
             else:
@@ -278,8 +284,12 @@ def test(request):
 def explore(request):
     user = request.user
     # p=Prefrence.objects.filter(user=user).prefetch_related("category").all()
-    articles = Article.objects.filter().annotate(like_count=Count('like'))
-
+    articles =( Article.objects.all().annotate(like_count=Count('like'))
+                        .annotate(comment_count=Count('comment')).select_related("user__userprofile") )
+    
+    paginator = Paginator(articles,5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     # likes = Like.objects.filter(user=request.user).values_list("article_id",flat=True)
     # bookmarks = Bookmark.objects.filter(user=request.user).values_list("article_id",flat=True)
     if request.user.is_authenticated:
@@ -287,6 +297,20 @@ def explore(request):
     # category = Category.objects.exclude(id__in = preferences).values_list("id",flat=True)
     # articles = Article.objects.exclude(category__in = preferences )
     print(articles)
-    context = {"articles":articles}
+    context = {"articles":page_obj}
     return render(request,"user/explore.html",context)
+@login_required
+def connections(request):
+    pending_connections =  Connection.objects.filter(
+            Q(sender=request.user) | Q(receiver=request.user) | Q(status = "pending" )
+        ).select_related("sender,receiver").values(
+            'sender', 'receiver'
+        )
+    print(pending_connections)
+    accepted_connections = Connection.objects.select_related("sender","receiver").filter(
+            Q(sender=request.user) | Q(receiver=request.user) & Q(status = "accepted" )
+        )
+    print(accepted_connections)
+    context = {"accepted_connections":accepted_connections,"pending_connections":pending_connections}
+    return render(request,"user/connections.html", context)
     

@@ -1,0 +1,89 @@
+{% extends "user/base.html" %} 
+{% block title %} Publish Article 
+{% endblock title %} 
+{% block main %} 
+{% include "user/components/back_button.html" %}
+{% for c in accepted_connections %}
+<div class="post w-100">
+  <div class="author-info d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <!-- <div class="author-photo"></div> -->
+      <div class="capitalize">
+        <div class="author-name">{% if request.user == c.sender %}
+                                {{ c.receiver }} 
+                            {% elif request.user == c.receiver %}
+                                {{ c.sender }}
+                             {% endif %}
+                            </div>
+        
+
+      
+          </a>
+
+        
+      </div>
+    </div>
+    <div>
+        <form
+        class="connect_user"
+        action="{% url 'connect_user' %}"
+        method="post"
+      >
+      {% if request.user == c.sender %}
+                                <input type="hidden" name="author" value="{{ c.receiver }}" />
+
+                            {% elif request.user == c.receiver %}
+                                
+                                <input type="hidden" name="author" value="{{ c.sender }}" />
+                             {% endif %}
+        
+        {% csrf_token %}
+        <!-- <span> author {{ a.user }}</span>
+                        
+                        <span>logged {{ request.user }} </span> -->
+        
+        
+        {% if  request.user == c.sender %} 
+        {% if c.receiver.id in connections %}
+        <button class="connect-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Disconnect
+        </button>
+        {% endif %}
+        {% elif request.user == c.receiver %}
+        {% if c.sender.id in connections %}
+             <button class="connect-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          Disconnect
+        </button>
+        {%  endif %}
+        {% endif %} 
+      </form>
+     
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

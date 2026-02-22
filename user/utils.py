@@ -4,6 +4,7 @@ from authentication.models import Connection,Prefrence
 from django.db.models import Q
 from django import template
 from .models import Bookmark,Like
+from bs4 import BeautifulSoup
 #import re
 from better_profanity import profanity
 from django.core.cache import cache
@@ -38,6 +39,11 @@ def filter_bad_words(text=""):
     clean_data =  profanity.censor(text, '*')
     is_profane =  profanity.contains_profanity(text)
     return clean_data,is_profane
+
+def parse_and_clean_article_content(html_content):
+    extracted_text = BeautifulSoup(html_content, 'html.parser').get_text()
+    return filter_bad_words(text=extracted_text)
+
 
 
 def get_complex_data(request):

@@ -84,7 +84,7 @@ class ConnectionManager(models.Manager):
         """Get mutual connections between two users"""
         user1_connections = self.get_user_connections(user1).values_list('sender', 'receiver')
         user2_connections = self.get_user_connections(user2).values_list('sender', 'receiver')
-        
+        print(user1_connections,user2_connections)
         # Extract all connected user IDs for both users
         user1_connected_ids = set()
         for sender, receiver in user1_connections:
