@@ -1,5 +1,6 @@
 {% extends "user/base.html" %} {% load user_tags %} {% block title %} Bookmarks
-{% endblock %} {% block main %} {% include "user/components/back_button.html" %}
+{% endblock %} {% block main %} 
+{% include "user/components/back_button.html" %}
 {% for bookmark in bookmarks %}
 <div class="post w-100">
   <div class="author-info d-flex align-items-center justify-content-between">
