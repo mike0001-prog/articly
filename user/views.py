@@ -301,16 +301,24 @@ def explore(request):
     return render(request,"user/explore.html",context)
 @login_required
 def connections(request):
-    pending_connections =  Connection.objects.filter(
-            Q(sender=request.user) | Q(receiver=request.user) | Q(status = "pending" )
-        ).select_related("sender,receiver").values(
-            'sender', 'receiver'
+    pending_connections =  Connection.objects.select_related("sender","receiver").filter(
+        
+            Q(sender=request.user) | Q(receiver=request.user) ,
+            status = "pending"
         )
     print(pending_connections)
-    accepted_connections = Connection.objects.select_related("sender","receiver").filter(
-            Q(sender=request.user) | Q(receiver=request.user) & Q(status = "accepted" )
+    accepted_connections = Connection.objects.select_related("sender__userprofile","receiver__userprofile").filter(
+            Q(sender=request.user) | Q(receiver=request.user) , status = "accepted" 
         )
     print(accepted_connections)
     context = {"accepted_connections":accepted_connections,"pending_connections":pending_connections}
     return render(request,"user/connections.html", context)
+@login_required
+@require_POST
+def accept_connections(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+        connection = Connection.objects.get(id=id)
+        connection.accept()
+    return redirect("connections_list")
     

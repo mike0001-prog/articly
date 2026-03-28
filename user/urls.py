@@ -14,6 +14,7 @@ urlpatterns = [
     path("search_page/",views.search_page,name="search_page"),
     path("test/", views.test, name="test"),
     path("explore/", views.explore, name="explore"),
-    path("connections/", views.connections,name="connections_list")
+    path("connections/", views.connections,name="connections_list"),
+    path("accept_connections/", views.accept_connections, name="accept_connections")
 
 ]

@@ -3,8 +3,90 @@
 {% endblock title %} 
 {% block main %} 
 {% include "user/components/back_button.html" %}
+{% if pending_connections %}
+   <div>
+                    <h2 class="carousel-title" style="color: white;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M8.25 6.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM15.75 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM2.25 9.75a3 3 0 1 1 6 0 3 3 0 0 1-6 0ZM6.31 15.117A6.745 6.745 0 0 1 12 12a6.745 6.745 0 0 1 6.709 7.498.75.75 0 0 1-.372.568A12.696 12.696 0 0 1 12 21.75c-2.305 0-4.47-.612-6.337-1.684a.75.75 0 0 1-.372-.568 6.787 6.787 0 0 1 1.019-4.38Z" clip-rule="evenodd" />
+                            <path d="M5.082 14.254a8.287 8.287 0 0 0-1.308 5.135 9.687 9.687 0 0 1-1.764-.44l-.115-.04a.563.563 0 0 1-.373-.487l-.01-.121a3.75 3.75 0 0 1 3.57-4.047ZM20.226 19.389a8.287 8.287 0 0 0-1.308-5.135 3.75 3.75 0 0 1 3.57 4.047l-.01.121a.563.563 0 0 1-.373.486l-.115.04c-.567.2-1.156.349-1.764.441Z" />
+                        </svg>
+                        Pending Connections
+                    </h2>
+                </div>
+    <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    {% for p in pending_connections %}
+                      <div class="connection-card">
+                        <div class="card-image-section">
+                            <div class="card-background-pattern"></div>
+                            <div class="user-profile-image"></div>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="user-name">
+                              {% if request.user == p.sender %}
+                                {{ p.receiver }} 
+                            {% elif request.user == p.receiver %}
+                                {{ p.sender }}
+                             {% endif %}
+                            </h3>
+                            <span class="user-level">
+                              {% if request.user == p.sender %}
+                                {{ p.receiver.category }} 
+                            {% elif request.user == p.receiver %}
+                                {{ p.sender.category }}
+                             {% endif %}
+                            </span>
+                         
+                            <div class="card-actions">
+
+                               <form action="{% url 'accept_connections' %}" method="post">
+                                <input type="hidden" name="id" value="{{ p.id }}">
+                                {% csrf_token %}
+                                 <button class="action-button connect-button" >Accept</button>
+                               </form>
+                                                      <form
+        class="connect_user"
+        action="{% url 'connect_user' %}"
+        method="post"
+      >
+      {% if request.user == p.sender %}
+                                <input type="hidden" name="author" value="{{ p.receiver }}" />
+
+                            {% elif request.user == p.receiver %}
+                                
+                                <input type="hidden" name="author" value="{{ p.sender }}" />
+                             {% endif %}
+        {% csrf_token %}
+        
+        {% if  request.user == p.sender %} 
+        {% if p.receiver.id in connections %}
+        <button class="action-button remove-button">
+          
+        Reject
+        </button>
+        {% endif %}
+        {% elif request.user == p.receiver %}
+        {% if p.sender.id in connections %}
+             <button class="action-buttton remove-button">
+         
+          Reject
+        </button>
+        {%  endif %}
+        {% endif %} 
+      </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    
+            
+                        </div>
+                    </div>             
+{% endif %}          
 {% for c in accepted_connections %}
-<div class="post w-100">
+<div class="post w-100 mt-2">
   <div class="author-info d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center">
       <!-- <div class="author-photo"></div> -->
