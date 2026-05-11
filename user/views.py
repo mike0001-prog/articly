@@ -80,6 +80,7 @@ def profile(request,uid):
     decode_encoded_username = decode_user_name(uid)
     print(decode_encoded_username)
     user = User.objects.get(username=decode_encoded_username)
+    print(user)
     user_profile = UserProfile.objects.get(user=user)
     articles =(Article.objects.filter(user = user )
                 .annotate(like_count=Count('like'))

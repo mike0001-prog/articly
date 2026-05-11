@@ -353,7 +353,7 @@
       </div>
 
       <main
-        style="overflow-y: scroll; height: 90vh"
+        style="overflow-y: scroll; height: 85vh"
         class="col-lg-9 col-md-12 p-lg-3 p-0"
       >
         {% block articly_main_body %}
@@ -803,7 +803,7 @@
                 type: "post",
                 success: function (response) {
                   const sresult = $(".search-result");
-                  console.log(response);
+                  console.log(response,sresult);
                   // console.log(JSON.parse(response))
                   const ArticleList = [response.articles];
                   console.log(ArticleList);
@@ -815,7 +815,7 @@
                   // const responseCopy = [...results]
                   // console.log(typeof responseCopy)
                   ArticleList.forEach((article) => {
-                    console.log(article.title);
+                    console.log(article);
                     searchResultBox.html(UpdateSearchResults(article));
                   });
                   //             if(responseCopy){
@@ -983,8 +983,11 @@
 
         function UpdateSearchResults(data) {
           return `
-       <li class="list-style-none">
-                  <a class="text-decoration-none" href="http://127.0.0.1:8000/user/comment_page/${data.slug}">${data.title}</a></li>`;
+       <li class="list-style-none p-2">
+                  <a class="text-decoration-none text-capitalize pp-color-bold" href="http://127.0.0.1:8000/user/comment_page/${data.slug}">
+                    ${data.title}
+                    </a>
+                  </li>`;
         }
         function CreatBookmarkbtn(bookmarked) {
           if (bookmarked) {

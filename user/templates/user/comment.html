@@ -1,7 +1,7 @@
 {% extends "user/base.html" %}
 {% load user_tags %}
 {% block title %} {{a.name}}  Comment {% endblock %}
-{% block main %}
+{% block articly_main_body %}
     {% include "user/components/back_button.html"  %}
 
        {% include "user/components/article.html" with a=a likes=likes bookmarks=bookmarks connections=connections   %}

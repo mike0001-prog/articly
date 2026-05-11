@@ -6,11 +6,12 @@
 
 <!-- <div> -->
        <div class="mb-3 py-2 px-3">
-        <div class="search w-100">
+        <div class="search w-100 mb-3">
             <form class="search_form" action="{% url 'search_page' %}" method="post">
                 {% csrf_token %}
        
-                   <input 
+<div class="d-inline-block position-relative" style="width: 80%;" >
+                       <input 
         type="search" 
         class="form-input " 
         id="search" 
@@ -18,19 +19,25 @@
         required
         maxlength="50"
         name="search_query"
-        style="width: 80%;"
+        style="width: 100%;"
         >
-        
+           <div class="search-result d-none bg-white position-absolute top-100 z-3 p-2" style="height: 40vh;">
          
 
-        <button type="submit" style="width: 50px; height: 50px; border-radius: 50%;" class="custom-btn">
+           </div>
+</div>
+
+        
+         
+<!-- {{ likes }} -->
+        <button type="submit" style="width: 50px; height: 50px; border-radius: 50%;" class="custom-btn bg-white">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--pp)" class="size-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
 </svg>
         </button>
          
             </form>
-           
+
         </div>
        
      </div>
